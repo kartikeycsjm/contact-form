@@ -3,45 +3,46 @@ import { transporter } from "@/emailConfig"; // Ensure this path is correct
 import FormGeneration from "@/app/Database/schema"; // Ensure this path is correct
 import { connectDB } from "@/app/Database/connectDB";
 
-const GET=async(req:NextRequest,res:NextResponse)=>{
+export const GET = async (req: NextRequest, res: NextResponse) => {
     try {
-        const id=req.nextUrl.searchParams.get('id');
+        const _id = req.nextUrl.searchParams.get('id');
+        console.log(_id);
+
         await connectDB()
-        const data=await FormGeneration.find({id})
+
+        const data = await FormGeneration.findOne({ _id })
         console.log(data);
-        return NextResponse.json({msg:'success',data})
+        return NextResponse.json({ msg: 'success', data })
     } catch (error) {
-        return NextResponse.json({msg:'error'})
+        return NextResponse.json({ msg: 'error' })
     }
 }
+
+
 export const POST = async (req: NextRequest) => {
     try {
         await connectDB()
-        const { email } = await req.json();
-        if (!/.+@.+\..+/.test(email)) {
-            return NextResponse.json({ message: 'Invalid email address' }, { status: 400 });
-        }
-        const data = await FormGeneration.create({ email });
-        console.log(data._id);
-        const link = process.env.WEB_LINK + '/' + data._id;
+        const { name, phone, email, message, remail } = await req.json();
         await transporter.sendMail({
             from: 'kartikeymishracsjm@gmail.com',
-            to: email,
-            subject: 'Contact Form Link',
+            to: remail,
+            subject: 'Contact Form Submission',
             html: `
         <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
             Hello,
             <br /><br />
-            This is your contact form link.
+            Someone has filled contact form.
             <br /><br />
-            <a href=${link}>${link}</a>
+            <p>${message}</p>
+            <p>${email}</p>
+            <p>${phone}</p>
+            <p>${name}</p>
             <br/>
             Best regards,
             <br />
-            Your Company
         </div>
       `,
-            text: `Hello, this is your contact form link.`,
+            text: `Hello, this is your contact form.`,
         });
         return NextResponse.json({ message: ['form generated check email'], });
     } catch (error) {
