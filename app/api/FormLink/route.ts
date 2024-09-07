@@ -16,7 +16,7 @@ export const POST = async (req: NextRequest) => {
     // Save email to database
     const data=await FormGeneration.create({ email });
     console.log(data._id);
-    const link=process.env.WEB_LINK+'/'+data._id`
+    const link=process.env.WEB_LINK+'/'+data._id;
     await transporter.sendMail({
       from: 'kartikeymishracsjm@gmail.com',
       to: email,
