@@ -10,6 +10,8 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ message: 'Invalid email address' }, { status: 400 });
         }
         const data = await FormGeneration.create({ email });
+        console.log(data);
+        
         console.log(data._id);
         const link = process.env.WEB_LINK + '/' + data._id;
         await transporter.sendMail({
