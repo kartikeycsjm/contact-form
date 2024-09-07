@@ -1,16 +1,32 @@
 'use client'
 import axios from 'axios';
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation';
 const Form = () => {
+
+
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
+    const [remail, setRemail] = useState('');
     const [message, setMessage] = useState('');
     const [outmessage, setOutmessage] = useState('');
-    const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
+
+    const params = useParams();
+    console.log(params.id);
+
+    const getEmail = async () => {
+        const res = await axios.get(`api/FormFill?id=${params.id}`);
+        console.log(res);
+    }
+    useEffect(() => {
+        getEmail()
+    }, [])
+
+
     const submitForm = async () => {
-        if(name&&email&&phone&&message){
+        if (name && email && phone && message) {
             setLoading(true)
             const res = await axios.post('api', {
                 name, phone, email, message
@@ -24,7 +40,7 @@ const Form = () => {
             setName('')
             setPhone('')
         }
-        else{
+        else {
             alert('please fill all the details')
         }
     }
@@ -61,9 +77,9 @@ const Form = () => {
                 w-[100px] h-[100px] 
                 p-2 my-4 mb-10 
               bg-green-600
-              ${outmessage==='Submitted'&&'bg-[#0080006f]'}
+              ${outmessage === 'Submitted' && 'bg-[#0080006f]'}
                 `}>
-                    {loading?'Submitting':`${outmessage==='Submitted'?'Submitted':'Submit'}`}
+                {loading ? 'Submitting' : `${outmessage === 'Submitted' ? 'Submitted' : 'Submit'}`}
             </button>
         </div>
     )

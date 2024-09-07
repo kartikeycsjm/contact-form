@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { transporter } from "@/emailConfig"; // Ensure this path is correct
 import FormGeneration from "@/app/Database/schema"; // Ensure this path is correct
 import { connectDB } from "@/app/Database/connectDB";
+
+const GET=async(req:NextRequest,res:NextResponse)=>{
+    try {
+        const id=req.nextUrl.searchParams.get('id');
+        await connectDB()
+        const data=await FormGeneration.find({id})
+        console.log(data);
+        return NextResponse.json({msg:'success',data})
+    } catch (error) {
+        return NextResponse.json({msg:'error'})
+    }
+}
 export const POST = async (req: NextRequest) => {
     try {
         await connectDB()

@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
 
-const formLink = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true
-    }
+const formLinkSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,  
+    trim: true,   
+    match: [/.+@.+\..+/, 'Please enter a valid email address']
+  }
 });
-
-const FormSubmission = mongoose.models.FormSubmission || mongoose.model('FormSubmission', formLink);
+const FormSubmission = mongoose.models.FormSubmission || mongoose.model('FormSubmission', formLinkSchema);
 
 export default FormSubmission;
